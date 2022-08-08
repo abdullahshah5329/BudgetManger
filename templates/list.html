@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"> </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+   <body>
+   
+      <table border = 1>
+         <thead>
+            <td>Activity</td>
+            <td>Expense</td>
+            <td>Date</td>
+            <td>Comment</td>
+         </thead>
+         
+         {% for row in rows %}
+            <tr>
+               <td>{{row["activity"]}}</td>
+               <td>{{row["expense"]}}</td>
+               <td> {{row["created_at"]}}</td>
+               <td>{{row['comment']}}</td>	
+            </tr>
+         {% endfor %}
+      </table>
+
+      <a href = "/">Go back to home page</a>
+
+      <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+<script>
+var ctx = document.getElementById("myChart").getContext("2d");
+
+var date = {{date|safe}};
+var data1 = {{data1|safe}};
+
+var data = {
+        labels: date,
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: data1
+            }
+        ]
+    };
+var myLineChart = new Chart(ctx).Line(data);
+</script>
+ 
+      
+   </body>
+</html>
