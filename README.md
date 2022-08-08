@@ -1,6 +1,11 @@
 # BudgetManger
 
-#### BudgetManager is a web app that allows users to keep track of their activities and expenses. Students can benefit a lot from this as 
+#### BudgetManager is a web app that allows users to keep track of their activities and expenses. Many users especially students can benefit a lot from this as they need to manage their expenses.
+
+# Tools and Software used:
+  - ## Flask with python
+  - ## HTML and CSS for fronend design
+  - ## Chart.js for creating charts and visualizations for users to view their expenses.
 
 ## Make sure to have flask and sqlite installed in your machine.
 
@@ -12,10 +17,10 @@
   - then activate it with the following command: source env/bin/activate
   - to deactivate, type in the follwoign command: deactivate
 
-- ### Step 3: Once you do the above, run the following commands to have the web app running:
-  - this first step is to be done initially to create a new table: python init_db.py  
+- ### Step 3: Once you do the above, run the following commands to have the web app running
+  - (table already exist) this first step is to be done initially to create a new table: python init_db.py
   - export FLASK_APP=myapp
   - export export FLASK_ENV=development
 
-- ### Step 4: When done step 3:
+- ### Step 4: When done step 3
   -  copy the URL and paste it into a browswer of your choosing
