@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Landing
+{% endblock %}
+
+{% block content %}
+<h1> This is Landing Page </h1>
+{% if session['user'] %}
+<h2>Welcome, {{ session['user']['first_name'] }}</h2>
+
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/spending">Spendings</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           Profile 
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+{% else %}
+<input type="button" class="btn btn-primary" onclick="location.href='/login';" value="Log In">
+<input type="button" class="btn btn-secondary" onclick="location.href='/create_account';" value="Create an account">
+
+{% endif %}
+
+<script>
+</script>
+{% endblock %}
