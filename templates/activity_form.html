@@ -39,7 +39,15 @@ Activity Form
       <form action = "{{ url_for('addrec') }}" method = "POST">
          <h3>Activity Information</h3>
          Activity<br>
-         <input type = "text" name = "activity" /></br>
+         <select name = "activity">
+            <option value="grocery">Grocery</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="shopping">Shopping</option>
+            <option value="gasandfuel">Gas and Fuel</option>
+            <option value="traveling">Traveling</option>
+            <option value="foodanddining">Food and Dining</option>
+            <option value="billsandutilities">Bills and Utilities</option>
+          </select></br>
          
          Expense<br>
          <input type="number" min="1" step="any" name = "expense" /><br>
