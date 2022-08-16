@@ -1,6 +1,8 @@
 from flask import Flask, request, redirect, g, render_template, session
 from db import Database
+import sqlite3 as sql
 from passlib.hash import pbkdf2_sha256
+import pandas as pd
 
 app = Flask(__name__, )
 
@@ -68,6 +70,73 @@ def create_account():
 def logout():
     session.pop('user', None)
     return redirect('/')
+
+
+@app.route('/enternew')
+def new_expense_activity():
+    return render_template("activity_form.html", msg=None)
+
+@app.route('/spending')
+def list():
+    con = sql.connect("budgetmanager.db")
+    con.row_factory = sql.Row
+    cur = con.cursor()
+    cur.execute("select * from expense_activity where user_id=?", [session['user']['user_id']])
+    rows = cur.fetchall()
+    activityList = ['billsandutilities', 'entertainment', 'foodanddining', 'gasandfuel', 'grocery', 'shopping', 'traveling']
+    
+    try:
+        df = get_db().get_trans(session['user']['username'])
+        print(df)
+        date = df['CREATED_AT'].values.tolist() # x axis
+        data1 = df['EXPENSE'].values.tolist()
+        expenseInfo = df['ACTIVITY'].values.tolist()
+        expenseInfo1 = df['EXPENSE'].values.tolist()
+
+        dff = df.groupby(["ACTIVITY"]).EXPENSE.sum().reset_index()
+        listExpense = dff["EXPENSE"].values.tolist()
+
+        # we need to make sure all values for each activity is included inside the listExpense list,
+        # if it isn't, then the pie chart won't work.
+        # we need to find a way where we can place 0 or -1 as a place holder
+        counter = 0
+        for i in activityList:
+            counter += 1
+            if i not in dff.values:
+                listExpense.insert(counter-1, 0)
+                #counter += 1
+                print(counter)
+            else:
+                print("good to go")
+
+        dfTimeSeries = df.groupby(["CREATED_AT"]).EXPENSE.sum().reset_index() #grouped dates
+        dfTimeSeriesExpense = dfTimeSeries['EXPENSE'].values.tolist()
+        dateNew = dfTimeSeries['CREATED_AT'].values.tolist() # x axis new
+        # print(dfTimeSeries)
+        # print(dateNew)
+        # print(dfTimeSeriesExpense)
+        # print(listExpense)
+
+            # deal with pie chart having some missing activities
+        
+        print(dff)
+        return render_template('/spending.html', rows=rows,dateNew=dateNew, dfTimeSeriesExpense=dfTimeSeriesExpense, expenseInfo=expenseInfo, listExpense=listExpense)
+    except: # No data was fetched
+        return render_template("activity_form.html", msg = "No data was found. Please create new data.")
+
+
+@app.route('/addrec',methods = ['POST', 'GET'])
+def addrec():
+    if request.method == 'POST':
+        activity = request.form['activity']
+        expense = request.form['expense']
+        created_at = request.form['created_at']
+        comment = request.form['comment']
+        username = session['user']['username']
+        get_db().create_trans(username, activity, created_at, expense, comment)
+    return redirect('/spending')
+            
+
 
 ## Add the generic function here
 
