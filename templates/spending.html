@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Analysis
+{% endblock %}
+
+{% block content %}
+
+{% if session['user'] %}
+<h2>Welcome, {{ session['user']['first_name'] }}</h2>
+
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="/spending">Spendings</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+           Profile 
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<input type="button" class="btn btn-primary" onclick="location.href='/enternew';" value="Add More Trans.">
+
+
+      <br></br>
+   
+      <table border = 1>
+         <thead>
+            <td>ID</td>
+            <td>Activity</td>
+            <td>Expense</td>
+            <td>Date</td>
+            <td>Comment</td>
+         </thead>
+         
+         {% for row in rows %}
+            <tr>
+               <td>{{row["expense_id"]}}</td>
+               <td>{{row["activity"]}}</td>
+               <td>{{row["expense"]}}</td>
+               <td> {{row["created_at"]}}</td>
+               <td>{{row['comment']}}</td>	
+            </tr>
+         {% endfor %}
+      </table>
+
+
+
+  <br></br>
+
+      <canvas id="mylineChart" style="width:100%;max-width:700px"></canvas>
+  
+      <canvas id="mypieChart" style="float:right;width:100%;max-width:700px"></canvas>
+
+      <br>
+      Start:<input type="date"> End:<input type="date"> <button onclick="filterDate()">Filter</button>
+      <button onclick="resetDate()">Reset</button>
+   </br>
+  
+<script>
+var ctx1 = document.getElementById("mylineChart").getContext("2d");
+var ctx2 = document.getElementById("mypieChart").getContext("2d");
+
+var dateNew = {{dateNew|safe}};
+//var data1 = {{data1|safe}};
+var expenseInfo = {{expenseInfo|safe}};
+var dff = {{expenseInfo|safe}};
+var listExpense = {{listExpense|safe}};
+
+var dfTimeSeriesExpense =  {{dfTimeSeriesExpense|safe}};
+
+
+//var df_entertainment = {{df_entertainment|safe}};
+//var df_gasandfuel = {{df_gasandfuel|safe}};
+//var df_shopping = {{df_shopping|safe}};
+
+var data = {
+        labels: dateNew,
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: dfTimeSeriesExpense
+            }
+        ]
+    };
+
+var myLineChart = new Chart(ctx1).Line(data);
+
+
+ var pieData =[
+            {
+                label: "Bills & Utilities",
+                color: "#46BFBD",
+               highlight: "#5AD3D1",
+                value: listExpense[0]
+            },
+            {
+                label: "Entertainment",
+                color: "#eb4034",
+               highlight: "#FFC870",
+                value: listExpense[1]
+            },
+            {
+                label: "Food & Dining",
+                color: "#34eb52",
+               highlight: "#FFC870",
+                value: listExpense[2]
+            },
+            {
+                label: "Gass & Fuel",
+                color: "#34ebb4",
+               highlight: "#FFC870",
+                value: listExpense[3]
+            },
+            {
+                label: "Grocery",
+                color: "#349beb",
+               highlight: "#FFC870",
+                value: listExpense[4]
+            },
+            {
+                label: "Shopping",
+                color: "#7434eb",
+               highlight: "#FFC870",
+                value: listExpense[5]
+            },
+            {
+                label: "Traveling",
+                color: "#cc34eb",
+               highlight: "#FFC870",
+                value: listExpense[6]
+            }
+        ];
+
+    var option = {
+        animation: true,
+        animationSteps: 30,
+        animationEasing: "linear",
+        responsive: true,
+    };
+var myPieChart = new Chart(ctx2).Pie(pieData);
+
+
+</script>
+ 
+{% else %}
+<input type="button" class="btn btn-primary" onclick="location.href='/login';" value="Log In">
+<input type="button" class="btn btn-secondary" onclick="location.href='/create_account';" value="Create an account">
+
+{% endif %}
+
+{% endblock %}
