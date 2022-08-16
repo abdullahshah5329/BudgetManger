@@ -45,11 +45,13 @@
 var ctx1 = document.getElementById("mylineChart").getContext("2d");
 var ctx2 = document.getElementById("mypieChart").getContext("2d");
 
-var date = {{date|safe}};
-var data1 = {{data1|safe}};
+var dateNew = {{dateNew|safe}};
+//var data1 = {{data1|safe}};
 var expenseInfo = {{expenseInfo|safe}};
 var dff = {{expenseInfo|safe}};
 var listExpense = {{listExpense|safe}};
+
+var dfTimeSeriesExpense =  {{dfTimeSeriesExpense|safe}};
 
 
 //var df_entertainment = {{df_entertainment|safe}};
@@ -57,7 +59,7 @@ var listExpense = {{listExpense|safe}};
 //var df_shopping = {{df_shopping|safe}};
 
 var data = {
-        labels: date,
+        labels: dateNew,
         datasets: [
             {
                 label: "My First dataset",
@@ -67,7 +69,7 @@ var data = {
                 pointStrokeColor: "#fff",
                 pointHighlightFill: "#fff",
                 pointHighlightStroke: "rgba(220,220,220,1)",
-                data: data1
+                data: dfTimeSeriesExpense
             }
         ]
     };

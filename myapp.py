@@ -64,21 +64,43 @@ def list():
 
     rows = cur.fetchall(); 
 
+
+    activityList = ['billsandutilities', 'entertainment', 'foodanddining', 'gasandfuel', 'grocery', 'shopping', 'traveling']
+
     date = df['created_at'].values.tolist() # x axis
     data1 = df['expense'].values.tolist()
     expenseInfo = df['activity'].values.tolist()
+    expenseInfo1 = df['expense'].values.tolist()
 
     dff = df.groupby(["activity"]).expense.sum().reset_index()
-    df_entertainment = dff.loc[dff['activity'] == 'entertainment']
-    df_gasandfuel = dff.loc[dff['activity'] == 'gasandfuel']
-    df_shopping = dff.loc[dff['activity'] == 'shopping']
-    tables=[dff.to_html(classes='data')]
     listExpense = dff["expense"].values.tolist()
-    print(data1)
-    #print(df_gasandfuel)
-    #print(dff)
-    #print(listExpense)
-    return render_template("list.html", rows = rows, date=date, data1=data1, expenseInfo=expenseInfo, listExpense=listExpense)
+
+    # we need to make sure all values for each activity is included inside the listExpense list,
+    # if it isn't, then the pie chart won't work.
+    # we need to find a way where we can place 0 or -1 as a place holder
+    counter = 0
+    for i in activityList:
+        counter += 1
+        if i not in dff.values:
+            listExpense.insert(counter-1, 0)
+            #counter += 1
+            print(counter)
+        else:
+            print("good to go")
+
+    dfTimeSeries = df.groupby(["created_at"]).expense.sum().reset_index() #grouped dates
+    dfTimeSeriesExpense = dfTimeSeries['expense'].values.tolist()
+    dateNew = dfTimeSeries['created_at'].values.tolist() # x axis new
+   # print(dfTimeSeries)
+   # print(dateNew)
+   # print(dfTimeSeriesExpense)
+   # print(listExpense)
+
+    # deal with pie chart having some missing activities
+    
+    print(dff)
+  
+    return render_template("list.html", rows = rows, dateNew=dateNew, dfTimeSeriesExpense=dfTimeSeriesExpense, expenseInfo=expenseInfo, listExpense=listExpense)
 
 
 @app.route('/edit_activity/<string:activity_id>',methods = ['POST', 'GET'])
