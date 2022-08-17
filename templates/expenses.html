@@ -43,10 +43,30 @@ Analysis
       Start:<input type="date"> End:<input type="date"> <button onclick="filterDate()">Filter</button>
       <button onclick="resetDate()">Reset</button>
    </br>
+
+   
+   <form style="float:right;width:100%;max-width:500px">
+    <h4>Date Filter</h4>
+
+    Expense<br>
+    <input type = "date" id = "start_date" /><br>
+    
+    Date<br>
+    <input type = "date" id = "end_date" /><br>
+
+    <button  onclick="pieFilter()" name = "submit date" value = "submit date">Submit Date</button>
+    <br></br>
+ </form>
+
+ <p id="demo"></p>
   
 <script>
 var ctx1 = document.getElementById("mylineChart").getContext("2d");
 var ctx2 = document.getElementById("mypieChart").getContext("2d");
+
+
+var test = {{dateNew|safe}};
+
 
 var dateNew = {{dateNew|safe}};
 //var data1 = {{data1|safe}};
@@ -78,6 +98,28 @@ var data = {
     };
 
 var myLineChart = new Chart(ctx1).Line(data);
+
+var newListExpense = []
+
+function pieFilter() {
+   // for i in listExpense:
+   var start_date_input = document.getElementById("start_date").value;
+    var end_date_input = document.getElementById("end_date").value;
+   for (let i = 0; i < dateNew.length; i++) {
+      if (dateNew[i] >= start_date_input && dateNew[i] <= end_date_input) {
+        newListExpense.push(dateNew[i]);
+        alert(newListExpense);
+      
+}
+
+
+console.log(myLineChart.config.data.labels = newListExpense);
+}
+//myLineChart.config.data.labels = newListExpense'
+//myLineChart.update();
+alert(newListExpense);
+}
+
 
 
  var pieData =[
@@ -135,5 +177,8 @@ var myPieChart = new Chart(ctx2).Pie(pieData);
 
 
 </script>
- 
+
+
+{% endif %}
+
 {% endblock %}
