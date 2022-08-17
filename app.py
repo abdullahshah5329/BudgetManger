@@ -3,6 +3,8 @@ from db import Database
 import sqlite3 as sql
 from passlib.hash import pbkdf2_sha256
 import pandas as pd
+import json 
+
 
 app = Flask(__name__, )
 
@@ -26,7 +28,11 @@ def close_connection(exception):
 # Maybe make a general home page
 @app.route('/')
 def index():
-    return render_template("landing.html")
+    try:
+        user = session['user']
+        return render_template("landing.html")
+    except:
+        return redirect('/login')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -76,7 +82,7 @@ def logout():
 def new_expense_activity():
     return render_template("activity_form.html", msg=None)
 
-@app.route('/spending')
+@app.route('/expenses')
 def list():
     con = sql.connect("budgetmanager.db")
     con.row_factory = sql.Row
@@ -120,9 +126,21 @@ def list():
             # deal with pie chart having some missing activities
         
         print(dff)
-        return render_template('/spending.html', rows=rows,dateNew=dateNew, dfTimeSeriesExpense=dfTimeSeriesExpense, expenseInfo=expenseInfo, listExpense=listExpense)
+        return render_template('/expenses.html', rows=rows,dateNew=dateNew, dfTimeSeriesExpense=dfTimeSeriesExpense, expenseInfo=expenseInfo, listExpense=listExpense)
     except: # No data was fetched
         return render_template("activity_form.html", msg = "No data was found. Please create new data.")
+
+@app.route('/social')
+def social():
+    friends = get_db().get_friends(session['user']['username']) # Returns a tuple (user_id, dictionary)
+    friends_dict = json.loads(friends[1])
+    friends_list = friends_dict["friends"]
+    if len(friends_list) == 0:
+        friends_name_list = None
+    else:
+        friends_name_list = [get_db().get_user(user) for user in friends_list]
+    print(friends_name_list)
+    return render_template('/social.html', friends = friends_name_list)
 
 
 @app.route('/addrec',methods = ['POST', 'GET'])
@@ -134,7 +152,7 @@ def addrec():
         comment = request.form['comment']
         username = session['user']['username']
         get_db().create_trans(username, activity, created_at, expense, comment)
-    return redirect('/spending')
+    return redirect('/expenses')
             
 
 

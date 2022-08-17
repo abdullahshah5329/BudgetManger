@@ -1,37 +1,19 @@
-{% extends 'base.html' %}
+{% extends 'landing.html' %}
 
 {% block title %}
 Activity Form
 {% endblock %}
 
-{% block content %}
-
-{% if session['user'] %}
-<h2>Welcome, {{ session['user']['first_name'] }}</h2>
-
-<nav class="navbar navbar-expand-lg bg-light">
-  <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="/spending">Spendings</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-           Profile 
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-      {% if msg %}
+{% block item %}
+<br></br>
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-xl-20">
+        <div class="card rounded-3 text-black">
+          <div class="row g-0">
+            <div class="col-lg-10">
+              <div class="card-body p-md-5 mx-md-6">
+        {% if msg %}
       <div class="alert alert-danger">
                 {{ msg }}
             </div>
@@ -59,13 +41,11 @@ Activity Form
          <textarea name = "comment" ></textarea><br>
          <input type = "submit" value = "submit" /><br>
       </form>
-
-      <h3><a href = "\">Go back to home page</a></h3>
-      
-{% else %}
-<input type="button" class="btn btn-primary" onclick="location.href='/login';" value="Log In">
-<input type="button" class="btn btn-secondary" onclick="location.href='/create_account';" value="Create an account">
-
-{% endif %}
-
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+</div>
 {% endblock %}

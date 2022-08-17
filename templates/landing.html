@@ -5,36 +5,58 @@ Landing
 {% endblock %}
 
 {% block content %}
-<h1> This is Landing Page </h1>
 {% if session['user'] %}
-<h2>Welcome, {{ session['user']['first_name'] }}</h2>
 
-<nav class="navbar navbar-expand-lg bg-light">
+<div class="container">
+<div class="row">
+<br></br>
+</div>
+<div class="row justify-content-end align-items-center">
+<div class="col-4">
+</div>
+<div class="col-4">
+<div class="text-center">
+    <img src="{{ url_for('static', filename='/img/logo.png/') }}" width="400px">
+</div>
+</div>
+<div class="col-4">
+    <a class="btn rounded-pill btn-dark dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{{ session['user']['first_name'] }}</a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+</div>
+</div>
+<div class="row">
+<br></br></div>
+</div>
+
+
+<nav class="navbar navbar-expand-sm navbar-light bg-light flex-sm-nowrap flex-wrap">
   <div class="container-fluid">
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <div class="navbar-collapse collapse flex-grow-1 justify-content-center" id="navbarSupportedContent">
+      <ul class="navbar-nav mx-auto">
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/spending">Spendings</a>
+            <a class="nav-link" href="/social">Social</a>
+            {% block social %} {% endblock %}
         </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-           Profile 
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/logout">Logout</a></li>
-          </ul>
+        <li class="nav-item">
+          <a class="nav-link" href="/expenses">Expenses</a>
+            {% block item %} {% endblock %}
         </li>
       </ul>
     </div>
   </div>
 </nav>
-{% else %}
-<input type="button" class="btn btn-primary" onclick="location.href='/login';" value="Log In">
-<input type="button" class="btn btn-secondary" onclick="location.href='/create_account';" value="Create an account">
 
 {% endif %}
 
+<script>
+$(document).ready(function() {
+  $('a.active').removeClass('active').removeAttr('aria-current');
+  $('a[href="' + location.pathname + '"]').addClass('active').attr('aria-current', 'page'); 
+});
+</script>
 {% endblock %}

@@ -2,7 +2,7 @@ import os
 import re
 import pandas as pd
 import sqlite3
-
+import json
 
 database = "budgetmanager.db"
 SQLITE_PATH = os.path.join(os.path.dirname(__file__), database)
@@ -27,6 +27,9 @@ class Database:
     def create_user(self, username, f_name, l_name, password):
         self.execute('INSERT INTO users (USERNAME, FIRST_NAME, LAST_NAME, PASSWD) VALUES (?, ?, ?, ?)',
                      [username, f_name, l_name, password])
+        user_id = self.get_user(username)['user_id']
+        friends = json.dumps({"username":username, "friends":[]})
+        self.execute('INSERT INTO friends (USER_ID, FRIENDS) VALUES (?, ?)', [user_id, friends])
         return
 
     def get_user(self, username):
@@ -69,6 +72,35 @@ class Database:
         else:
             return None 
 
+    def get_friends(self, username):        
+        user = self.get_user(username)
+        if user:
+            user_id = user['user_id']
+        else:
+            return None
+    
+        data = self.select('SELECT * FROM friends WHERE USER_ID=?', [user_id])
+        if data:
+            d = data[0]
+            return d # It's a tuple
+        else:
+            return None
+                
+
+    def add_friends(self, username, friend):
+        user = self.get_user(username)
+        if user:
+            user_id = user['user_id']
+        else:
+            return None
+        friends = self.get_friends(username) # Receives a tuple
+        # Get json of the string
+        friends_list = json.loads(friends[1])
+        friends_list['friends'].append(friend)
+        self.execute('UPDATE friends SET FRIENDS=? WHERE USER_ID=?', [json.dumps(friends_list), user_id])
+        return
+
+
     def close(self):
         self.conn.close()
 
@@ -81,5 +113,9 @@ if __name__ == "__main__":
     print(d.get_trans("a544"))
     import pandas as pd
     a = pd.read_sql_query(f"select * from expense_activity where user_id={d.get_user('a544')['user_id']}", d.conn)
-    print(a['created_at'])    
-#d.create_user("jz2323", "Jay", "Zebra", "##########")
+    print(a['CREATED_AT'])    
+    d.create_user("testing", "f", "l", "testing")
+    print(d.get_user("testing"))
+    print(d.get_friends("testing"))
+    d.add_friends("testing", "a544")
+    print(d.get_friends("testing"))

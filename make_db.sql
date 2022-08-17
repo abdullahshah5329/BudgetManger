@@ -19,6 +19,12 @@ CREATE TABLE IF NOT EXISTS expense_activity (
    FOREIGN KEY(USER_ID) REFERENCES users(USER_ID)
 );
 
+-- social
+CREATE TABLE IF NOT EXISTS friends (
+    USER_ID integer NOT NULL CONSTRAINT USER_ID PRIMARY KEY,
+    FRIENDS text,
+    FOREIGN KEY(USER_ID) REFERENCES users(USER_ID)
+);
 
 -- EXAMPLES:
 -- users data
