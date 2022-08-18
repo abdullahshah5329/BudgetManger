@@ -7,9 +7,45 @@ Analysis
 {% block item %}
 
 <input type="button" class="btn btn-primary" onclick="location.href='/enternew';" value="Add More Trans.">
+<style>
+    ul.yes{height:200px; width:40%;}
+    ul.yes{overflow:hidden; overflow-y:scroll;}
 
+
+    ul {
+  list-style-type: none;
+  padding: 0;
+  border: 1px solid #ddd;
+}
+
+ul li {
+  padding: 8px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+ul li:last-child {
+  border-bottom: none
+}
+
+form {
+  display: inline-block;
+}
+
+
+</style>
 
       <br></br>
+
+      <ul class = "yes">
+        {% for row in rows %}
+     <li>{{row["activity"]}} | {{row["expense"]}} | {{row["created_at"]}} 
+        <form action = "{{ url_for('delete_record', activity_id=row.expense_id) }}" method = "POST">
+          <input type=submit name = 'delete' value="Delete">
+      </form>
+        <a href="edit_activity/{{row.expense_id}}" method = "POST" class="btn btn-default pull-right">Edit</a>
+     </li>
+        {% endfor %}
+     </ul>
    
       <table border = 1>
          <thead>
@@ -35,14 +71,16 @@ Analysis
 
   <br></br>
 
-      <canvas id="mylineChart" style="width:100%;max-width:700px"></canvas>
+      <canvas id="mylineChart" style="float:left;width:100%;max-width:500px"></canvas>
   
       <canvas id="mypieChart" style="float:right;width:100%;max-width:700px"></canvas>
 
       <br>
-      Start:<input type="date"> End:<input type="date"> <button onclick="filterDate()">Filter</button>
-      <button onclick="resetDate()">Reset</button>
-   </br>
+      Start:<input type="date" id ="start_date"> End:<input type="date" id = "end_date"> <button onclick="pieFilter()">Filter</button>
+        </br>
+
+
+ <p id="demo"></p>
   
 <script>
 var ctx1 = document.getElementById("mylineChart").getContext("2d");
@@ -61,6 +99,7 @@ var dfTimeSeriesExpense =  {{dfTimeSeriesExpense|safe}};
 //var df_gasandfuel = {{df_gasandfuel|safe}};
 //var df_shopping = {{df_shopping|safe}};
 
+//["2022-08-1", "2022-08-2", "2022-08-8", "2022-08-16", "2022-08-17", "2022-08-31"]
 var data = {
         labels: dateNew,
         datasets: [
@@ -77,8 +116,67 @@ var data = {
         ]
     };
 
-var myLineChart = new Chart(ctx1).Line(data);
+var config = {
+    data,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
 
+};
+
+var canvas = document.getElementById('mylineChart');
+
+function pieFilter() {
+    counter = 0;
+    var newListDate = []
+    var newListExpense = []
+   // for i in listExpense:
+   var start_date_input = document.getElementById("start_date").value;
+    var end_date_input = document.getElementById("end_date").value;
+   for (let i = 0; i < dateNew.length; i++) {
+      if (dateNew[i] >= start_date_input && dateNew[i] <= end_date_input) {
+        newListDate.push(dateNew[i]);
+        newListExpense.push(dfTimeSeriesExpense[i])
+      //  alert(newListExpense[i]);
+       // alert(newListDate[i]);
+
+// Then input a new data object, with form values as data
+  data = {
+        labels: newListDate,
+        datasets: [
+            {
+                label: "My First dataset",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: newListExpense
+            }
+        ]
+    };
+    var myLineChart = new Chart(ctx1).Line(data);
+//alert(newListExpense);
+
+}
+//counter++
+//myLineChart.id= "new";
+//myLineChart.labels = "2022-09-01";
+//myLineChart.update();
+//console.log(myLineChart);
+//myLineChart.config.data.labels = newListExpense'
+//myLineChart.update();
+//alert(newListExpense);
+}
+}
+
+//console.log(myLineChart);
+var myLineChart = new Chart(ctx1).Line(data);
 
  var pieData =[
             {
