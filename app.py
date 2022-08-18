@@ -153,6 +153,68 @@ def addrec():
         username = session['user']['username']
         get_db().create_trans(username, activity, created_at, expense, comment)
     return redirect('/expenses')
+
+
+
+
+@app.route('/edit_activity/<string:activity_id>',methods = ['POST', 'GET'])
+def edit_activity(activity_id):
+    test = fully_edit_activity(activity_id)
+
+    #return render_template("edit.html", item=item)
+    return render_template('edit_activity.html', activity_id=activity_id, test=test)
+
+
+@app.route('/fully_edit_activity/<activity_id>',methods = ['POST', 'GET'])
+def fully_edit_activity(activity_id):
+    if request.method == 'POST':
+        try:
+            activity_id = activity_id
+            activity = request.form['activity']
+            expense = request.form['expense']
+            created_at = request.form['created_at']
+            comment = request.form['comment']
+           
+            with sql.connect("budgetmanager.db") as con:
+                cur = con.cursor()
+                cur.execute("UPDATE expense_activity SET activity = ?, expense = ?, created_at = ?, comment = ? WHERE user_id = ? and expense_id = ?",
+                    ([activity, expense, created_at, comment, session['user']['user_id'], activity_id]))
+                
+                con.commit()
+                msg = "Record successfully added"
+      
+        except:
+            con.rollback()
+            msg = "error in insert operation"
+      
+        finally:
+            
+            return render_template("result.html", msg = msg, activity_id = activity_id)
+            con.close()
+
+
+@app.route('/delete/<activity_id>', methods = ['POST'])
+#@is_logged_in
+def delete_record(activity_id):
+
+    with sql.connect("budgetmanager.db") as con:
+        cur = con.cursor()
+        cur.execute('delete from expense_activity where user_id=? and expense_id = ?', [session['user']['user_id'], activity_id])
+        #con = sql.connect("database.db")
+        con.row_factory = sql.Row
+
+        cur1 = con.cursor()
+        cur1.execute("select * from expense_activity where user_id=?", [session['user']['user_id']])
+       # df = pd.read_sql_query("select * from expense_activity where user_id=?", [session['user']['user_id']])
+
+        rows = cur1.fetchall(); 
+        
+        #date = df['created_at'].values.tolist() # x axis
+       # data1 = df['expense'].values.tolist()
+
+        #print(date)
+        con.commit()
+    return render_template("/delete.html", rows = rows)
             
 
 
