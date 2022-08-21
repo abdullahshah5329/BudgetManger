@@ -16,7 +16,7 @@
 - ### Step 1: clone repo
 
 - ### Step 2:
-  - in python:  python3 app.py
+  - in directory of project inside BudgetManager, run:  python3 app.py
 
 - ### Step 3: When done step 2
   -  copy the URL and paste it into a browswer of your choosing
