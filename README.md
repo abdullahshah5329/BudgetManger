@@ -15,16 +15,8 @@
 ## To successfully run project:
 - ### Step 1: clone repo
 
-- ### Step 2: in directory of project, create a virtual environment
-  - in python:  python3.8 -m venv env
-  - then activate it with the following command: source env/bin/activate
-  - to deactivate, type in the follwoign command: deactivate
+- ### Step 2:
+  - in python:  python3 app.py
 
-- ### Step 3: Once you do the above, run the following commands to have the web app running
-  - (table already exist) this first step is to be done initially to create a new table: python init_db.py
-  - export FLASK_APP=myapp
-  - export export FLASK_ENV=development
-  - flask run
-
-- ### Step 4: When done step 3
+- ### Step 3: When done step 2
   -  copy the URL and paste it into a browswer of your choosing
