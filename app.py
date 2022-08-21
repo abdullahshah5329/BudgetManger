@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, g, render_template, session
+from flask import Flask, request, redirect, g, render_template, session, flash
 from db import Database
 import sqlite3 as sql
 from passlib.hash import pbkdf2_sha256
@@ -45,7 +45,7 @@ def login():
             if user:
                 if pbkdf2_sha256.verify(passwd, user['passwd']):
                     session['user'] = user
-                    return redirect('/')
+                    return redirect('/home')
             else:
                 message = "Incorrect username or password"
     return render_template("login.html", message=message)
@@ -82,14 +82,26 @@ def logout():
 def new_expense_activity():
     return render_template("activity_form.html", msg=None)
 
-@app.route('/expenses')
+@app.route('/expenses', methods = ['GET', 'POST'])
 def list():
+
     con = sql.connect("budgetmanager.db")
     con.row_factory = sql.Row
     cur = con.cursor()
-    cur.execute("select * from expense_activity where user_id=?", [session['user']['user_id']])
-    rows = cur.fetchall()
-    activityList = ['billsandutilities', 'entertainment', 'foodanddining', 'gasandfuel', 'grocery', 'shopping', 'traveling']
+
+    if request.method == 'POST':
+        start_date_activity = request.form['start_date_activity']
+        end_date_activity = request.form['end_date_activity']
+
+        cur.execute("select * from expense_activity where user_id=? and created_at between ? and ?", [session['user']['user_id'], start_date_activity, end_date_activity])
+
+        rows = cur.fetchall()
+        activityList = ['billsandutilities', 'entertainment', 'foodanddining', 'gasandfuel', 'grocery', 'shopping', 'traveling']
+    else:
+        cur.execute("select * from expense_activity where user_id=?", [session['user']['user_id']])
+
+        rows = cur.fetchall()
+        activityList = ['billsandutilities', 'entertainment', 'foodanddining', 'gasandfuel', 'grocery', 'shopping', 'traveling']
     
     try:
         df = get_db().get_trans(session['user']['username'])
@@ -214,8 +226,9 @@ def home():
     for friend_username in friends_list:
         tempdf = get_db().get_trans(friend_username)
         finaldf = pd.concat([finaldf, tempdf])
-    average_spending = finaldf["EXPENSE"].mean() # friends' avg. spending
-    your_spend = get_db().get_trans(username)["EXPENSE"].mean()
+    average_spending = round(finaldf["EXPENSE"].mean(), 2) # friends' avg. spending
+    your_spend = round(get_db().get_trans(username)["EXPENSE"].mean(), 2)
+    #print(your_spend)
     return render_template("/home.html", your_spending = your_spend, avg_spend = average_spending)
 
 @app.route('/edit_activity/<string:activity_id>',methods = ['POST', 'GET'])
@@ -250,7 +263,8 @@ def fully_edit_activity(activity_id):
       
         finally:
             
-            return render_template("result.html", msg = msg, activity_id = activity_id)
+            flash('You successfully edited chosen activity')
+            return redirect("/expenses")
             con.close()
 
 
@@ -267,16 +281,41 @@ def delete_record(activity_id):
         cur1.execute("select * from expense_activity where user_id=?", [session['user']['user_id']])
        # df = pd.read_sql_query("select * from expense_activity where user_id=?", [session['user']['user_id']])
 
-        rows = cur1.fetchall(); 
+        #rows = cur1.fetchall(); 
         
         #date = df['created_at'].values.tolist() # x axis
        # data1 = df['expense'].values.tolist()
 
-        #print(date)
         con.commit()
+        flash('You successfully deleted chosen activity')
     return redirect("/expenses")
-            
 
+
+'''
+@app.route('/filter', methods = ['POST'])
+def filter_record():
+    filter_record.has_been_called = True
+    if request.method == 'POST':
+     #   global rows
+        try:
+           # activity_id = activity_id
+            start_date = request.form['start_date_activity']
+            end_date = request.form['end_date_activity']
+            list(start_date, end_date)
+
+        except:
+            msg = "no good"
+
+   # con = sql.connect("budgetmanager.db")
+   # con.row_factory = sql.Row
+   # cur = con.cursor()
+   # cur.execute("select * from expense_activity where user_id=? and created_at < 2022-08-08", [session['user']['user_id']])
+   # rows = cur.fetchall()
+    
+    return redirect("/expenses")
+    #con.close()
+            
+'''
 
 ### Add the generic function here
 

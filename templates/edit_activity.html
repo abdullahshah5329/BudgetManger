@@ -18,8 +18,9 @@ Activity Form
                 {{ msg }}
             </div>
       {% endif %}
-      <form action = "{{ url_for('addrec') }}" method = "POST">
-         <h3>Activity Information</h3>
+
+      <form action =  "{{ url_for('fully_edit_activity', activity_id=activity_id) }}" method = "POST">
+         <h3>Edit Activity Information</h3>
          Activity<br>
          <select name = "activity" required>
             <option value="grocery">Grocery</option>
@@ -30,19 +31,21 @@ Activity Form
             <option value="foodanddining">Food and Dining</option>
             <option value="billsandutilities">Bills and Utilities</option>
           </select></br>
-         
+
          Expense<br>
-         <input type="number" min="0.00" step="any" name = "expense" required/><br>
-         
+         <input type="number" min="1" step="any" name = "expense" required/><br>
          
          Date<br>
          <input type = "date" name = "created_at" required/><br>
 
          Comment<br>
          <textarea name = "comment" required></textarea><br>
-         <input type = "submit" value = "submit" /><br>
+         
+         <input href = "\enternew" type = "submit" value = "submit" required/><br>
+
+
       </form>
-        </div>
+    </div>
     </div>
     </div>
     </div>

@@ -23,25 +23,25 @@ Create Account
 <form method="POST" action="/create_account">
             <div class="mb-3">
                 <label for="firstname" class="form-label">First Name</label>
-                <input type="text" class="form-control" name="first">
+                <input type="text" class="form-control" name="first" required>
             </div>
             
             <div class="mb-3">
                 <label for="lastname" class="form-label">Last Name</label>
-                <input type="text" class="form-control" name="last">
+                <input type="text" class="form-control" name="last" required>
             </div>
 
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control" name="username">
+                <input type="text" class="form-control" name="username" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" name="passwd">
+                <input type="password" class="form-control" name="passwd" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Confirm Password</label>
-                <input type="password" class="form-control" name="confirm_pass">
+                <input type="password" class="form-control" name="confirm_pass" required>
             </div>
 
             <button type="submit" class="btn btn-primary">Create an account</button>

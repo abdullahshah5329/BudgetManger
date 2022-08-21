@@ -4,11 +4,109 @@
 <div class="container">
 <div class="row">
 <div class="col">
-<span>You have spent {{your_spending}} on average.</span>
+    <br></br>
+<span class = "yourmessage">You have spent ${{your_spending}} on average.</span>
 </div>
 <div class="col">
-<span>Your friends have spent {{avg_spend}} on average.</span>
+    <br></br>
+<span class = "friendsmessage">Your friends have spent ${{avg_spend}} on average.</span>
 </div>
 </div>
 </div>
+
+<br></br>
+
+<style>
+
+
+#mybarChart {
+      position: absolute;
+       margin-left: 60px;
+       top: 360px;
+      left: 370px;
+      right: 0;
+      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 70%;
+  height: 45%;
+  border-radius: 15px;
+}
+
+span.yourmessage {
+
+    position: absolute;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    margin-left: 70px;
+   margin-right: 580px;
+      left: 450px;
+      right: 0;
+      border-radius: 5px;
+}
+
+span.friendsmessage {
+
+position: absolute;
+box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    top:320px;
+   margin-left: 70px;
+   margin-right: 580px;
+  left: 450px;
+  right: 0;
+  border-radius: 5px;
+}
+
+
+</style>
+
+
+<canvas id="mybarChart" style="width:200%;max-width:580px"></canvas>
+
+<!-- <canvas id="friendsbarChart" style="width:100%;max-width:450px"></canvas> -->
+
+
+<script>
+    var ctx = document.getElementById("mybarChart").getContext("2d");
+
+   // var ctxfriends = document.getElementById("friendsbarChart").getContext("2d");
+
+    var your_spending = {{your_spending|safe}};
+
+    var friends_spending = {{avg_spend|safe}};
+
+/*
+    var data = {
+    labels: ["My Average"],
+    datasets: [
+        {
+            fillColor: "#79D1CF",
+            strokeColor: "#79D1CF",
+            data: [your_spending]
+        }
+    ]
+};
+*/
+
+var data1 = {
+    labels: ["My Average", "Friends Average"],
+    datasets: [
+        {
+            fillColor: "#79D1CF",
+            strokeColor: "#79D1CF",
+            data: [your_spending, friends_spending]
+        }
+    ]
+};
+
+    var myLineChart = new Chart(ctx).Bar(data1);
+
+   // myLineChart.datasets.data[0].fillColor = "red";
+   // myLineChart.update();
+
+    //var myfriendsLineChart = new Chart(ctxfriends).Bar(data1);
+
+    console.log(myLineChart);
+
+
+</script>
+
 {% endblock %}
