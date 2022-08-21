@@ -8,7 +8,6 @@
   - ### Chart.js for creating charts and visualizations for users to view their expenses.
   - ### Sqlite3 for relational tables/database to store data.
   - ### Pandas
-  - ### db
   - ### sqlite3
   - ### passlib.has
   - ### json
