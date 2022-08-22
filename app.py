@@ -4,7 +4,7 @@ import sqlite3 as sql
 from passlib.hash import pbkdf2_sha256
 import pandas as pd
 import json 
-
+import numpy as np
 
 app = Flask(__name__, )
 
@@ -223,11 +223,25 @@ def home():
     friends_dict = json.loads(friends[1])
     friends_list = friends_dict["friends"]
     finaldf = pd.DataFrame()
+
+    if finaldf.empty:
+        finaldf. replace(np.nan,'',regex=True)
+
     for friend_username in friends_list:
         tempdf = get_db().get_trans(friend_username)
         finaldf = pd.concat([finaldf, tempdf])
-    average_spending = round(finaldf["EXPENSE"].mean(), 2) # friends' avg. spending
-    your_spend = round(get_db().get_trans(username)["EXPENSE"].mean(), 2)
+    print(finaldf)
+    try:
+        average_spending = round(finaldf["EXPENSE"].mean(), 2) # friends' avg. spending
+        #print(round(get_db().get_trans(username)["EXPENSE"].mean(), 2))
+    except:
+        average_spending = 0.0
+    try:
+        your_spend = round(get_db().get_trans(username)["EXPENSE"].mean(), 2)
+    except:
+        #pass
+        your_spend = 0.0
+    
     #print(your_spend)
     return render_template("/home.html", your_spending = your_spend, avg_spend = average_spending)
 
