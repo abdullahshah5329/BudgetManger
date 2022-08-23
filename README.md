@@ -16,6 +16,8 @@
 
 ## Run the below commands in terminal within the directory of the project folder.
 
+- ### If database is deleted, run this: cat make_db.sql | sqlite3 budgetmanager.db
+
 ## To successfully run project:
 - ### Step 1: clone repo
 
