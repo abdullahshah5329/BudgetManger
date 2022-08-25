@@ -7,24 +7,23 @@
   - ### HTML and CSS for frontend design
   - ### Chart.js for creating charts and visualizations for users to view their expenses.
   - ### Sqlite3 for relational tables/database to store data.
+  - ### Pandas
+  - ### sqlite3
+  - ### passlib.has
+  - ### json
 
 ## Make sure to have flask and sqlite installed in your machine.
 
 ## Run the below commands in terminal within the directory of the project folder.
 
+- #### If database is deleted, run this: cat make_db.sql | sqlite3 budgetmanager.db
+- #### then run the following: python3 db.py
+
 ## To successfully run project:
 - ### Step 1: clone repo
 
-- ### Step 2: in directory of project, create a virtual environment
-  - in python:  python3.8 -m venv env
-  - then activate it with the following command: source env/bin/activate
-  - to deactivate, type in the follwoign command: deactivate
+- ### Step 2:
+  - in directory of project inside BudgetManager, run:  python3 app.py
 
-- ### Step 3: Once you do the above, run the following commands to have the web app running
-  - (table already exist) this first step is to be done initially to create a new table: python init_db.py
-  - export FLASK_APP=myapp
-  - export export FLASK_ENV=development
-  - flask run
-
-- ### Step 4: When done step 3
+- ### Step 3: When done step 2
   -  copy the URL and paste it into a browswer of your choosing

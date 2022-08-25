@@ -1,0 +1,88 @@
+{% extends 'landing.html' %}
+
+{% block social %}
+
+{% if friends %}
+<div class="container">
+<div class="row">
+<div class="col">
+<ul class="list-group list-group-flush">
+    {% for friend in friends %}
+  <li class="list-group-item" id={{friend['username']}}>
+        <div class="d-flex justify-content-between">
+        <span>{{friend['first_name']}} {{friend['last_name']}}</span>
+        <form action="/remove_friend" method="post">
+        <input type="hidden" name="username" value={{friend['username']}}>
+        <button type="submit" class="btn btn-close"></button>
+        </form>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+</div>
+<div class="col">
+<h4>Looking for more friends?</h4>
+<form action='/search_friend' method="post">
+<div class="input-group">
+  <input type="search" class="form-control rounded" placeholder="Username" aria-label="Search" aria-describedby="search-addon" name="username" />
+  <button type="submit" class="btn btn-outline-primary">search</button>
+</div>
+</form>
+
+{% if msg %}
+<div class="alert alert-danger">
+{{msg}}
+</div>
+{% endif %}
+
+{% if searched %}
+<div class="d-flex justify-content-evenly align-items-center">
+<span>{{searched['first_name']}} {{searched['last_name']}}</span>
+{% if added %}
+<button class="btn btn-success" disabled>Added</a>
+{% else %}
+<form action="/add_friend" method="post">
+    <input type="hidden" name="username" value={{searched['username']}}>
+    <button class="btn btn-success" type="submit">Add</a>
+</form>
+{% endif %}
+</div>
+{% endif %}
+</div>
+</div>
+</div>
+
+{% else %}
+<div class="text-center">
+<h4>Looks like you are lonely</h4>
+<form action='/search_friend' method="post">
+<div class="input-group">
+  <input type="search" class="form-control rounded" placeholder="Username" aria-label="Search" aria-describedby="search-addon" name="username" />
+  <button type="submit" class="btn btn-outline-primary">search</button>
+</div>
+</form>
+{% if msg %}
+<div class="alert alert-danger">
+{{msg}}
+</div>
+{% endif %}
+
+{% if searched %}
+<div class="d-flex justify-content-evenly align-items-center">
+<span>{{searched['first_name']}} {{searched['last_name']}}</span>
+{% if added %}
+<button class="btn btn-success" disabled>Added</a>
+{% else %}
+<form action="/add_friend" method="post">
+    <input type="hidden" name="username" value={{searched['username']}}>
+    <button class="btn btn-success" type="submit">Add</a>
+</form>
+{% endif %}
+</div>
+{% endif %}
+
+</div>
+</div>
+{% endif %}
+
+{% endblock %}
